@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  // Show/hide password toggle
+  // 👁️ Show/hide password
   $("#togglePassword").click(function () {
     const passwordInput = $("#password");
     const type = passwordInput.attr("type") === "password" ? "text" : "password";
@@ -7,56 +7,58 @@ $(document).ready(function () {
     $(this).text(type === "password" ? "👁️" : "🙈");
   });
 
-  // Form submission handler
-  $("#registrationForm").submit(function (e) {
-    e.preventDefault(); // Prevent form from submitting
+  // 📞 Live phone input: only digits and max 10
+  $("#phone").on("input", function () {
+    let value = $(this).val().replace(/\D/g, ""); // Remove non-digits
+    if (value.length > 10) value = value.substring(0, 10);
+    $(this).val(value);
+  });
 
-    // Clear any previous messages
+  // ✅ Form submission
+  $("#registrationForm").submit(function (e) {
+    e.preventDefault();
+
     const messageBox = $("#messageBox").removeClass("error success").hide();
 
-    // Get input values
     const name = $("#name").val().trim();
     const email = $("#email").val().trim();
     const phone = $("#phone").val().trim();
     const password = $("#password").val();
 
-    // Validate fields
+    // 🔍 Field empty check
     if (!name || !email || !phone || !password) {
       showMessage("Please fill in all fields.", "error");
       return;
     }
 
-    // Email validation using regex
+    // 📧 Email format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       showMessage("Please enter a valid email address.", "error");
       return;
     }
 
-    // Phone number: must be 10 digits
+    // ☎️ Phone: exactly 10 digits
     if (!/^\d{10}$/.test(phone)) {
       showMessage("Phone number must be exactly 10 digits.", "error");
       return;
     }
 
-    // Password validation: min 8 chars, uppercase, lowercase, number
+    // 🔐 Password: 8+ chars, one uppercase, one lowercase, one digit
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(password)) {
       showMessage("Password must be at least 8 characters long and include uppercase, lowercase, and a number.", "error");
       return;
     }
 
-    // If everything is valid
+    // 🎉 Success
     showMessage("Registration successful!", "success");
-
-    // Optional: Reset form after success
     $("#registrationForm")[0].reset();
     $("#togglePassword").text("👁️");
   });
 
-  // Function to display message
+  // 🔁 Reusable message function
   function showMessage(message, type) {
-    const box = $("#messageBox");
-    box.text(message).removeClass("error success").addClass(type).fadeIn();
+    $("#messageBox").text(message).removeClass("error success").addClass(type).fadeIn();
   }
 });
