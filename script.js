@@ -24,9 +24,10 @@ $(document).ready(function () {
     const email = $("#email").val().trim();
     const phone = $("#phone").val().trim();
     const password = $("#password").val();
+    const confirmPassword = $("#confirmPassword").val();
 
     // 🔍 Field empty check
-    if (!name || !email || !phone || !password) {
+    if (!name || !email || !phone || !password || !confirmPassword) {
       showMessage("Please fill in all fields.", "error");
       return;
     }
@@ -48,6 +49,12 @@ $(document).ready(function () {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(password)) {
       showMessage("Password must be at least 8 characters long and include uppercase, lowercase, and a number.", "error");
+      return;
+    }
+
+    // ❌ Confirm password match check
+    if (password !== confirmPassword) {
+      showMessage("Passwords do not match.", "error");
       return;
     }
 
